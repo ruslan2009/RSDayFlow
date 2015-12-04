@@ -86,6 +86,13 @@
  */
 @property (nonatomic, getter = isPagingEnabled) BOOL pagingEnabled;
 
+/**
+ A Boolean value that determines whether to show partial months in case `startDate` and/or `endDate` is specified.
+ 
+ @discussion If `YES`, starting/ending month will not contain only days after `startDate`/before `endDate` respectively.
+ */
+@property (nonatomic, getter = isPartialMonthsEnabled) BOOL partialMonthsEnabled;
+
 ///----------------------------
 /// @name Scrolling to the Date
 ///----------------------------

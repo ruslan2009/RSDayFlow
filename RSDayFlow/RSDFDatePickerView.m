@@ -135,6 +135,12 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 #pragma mark - Properties
 
+- (void)setPartialMonthsEnabled:(BOOL)partialMonthsEnabled
+{
+    _partialMonthsEnabled = partialMonthsEnabled;
+    [self.collectionView reloadData];
+}
+
 - (NSCalendar *)calendar
 {
     if (!_calendar) {
@@ -488,14 +494,17 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
         return dateComponents;
     })()) toDate:firstDayInMonth options:0];
     
+    NSDate *from = self.startDate && [self.startDate compare:firstDayInMonth] == NSOrderedDescending ? self.startDate : firstDayInMonth;
+    NSDate *to = self.endDate && [self.endDate compare:lastDayInMonth] == NSOrderedAscending ? self.endDate : lastDayInMonth;
+
     NSDate *fromFirstWeekday = [self.calendar dateFromComponents:((^{
-        NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitWeekOfYear|NSCalendarUnitYearForWeekOfYear fromDate:firstDayInMonth];
+        NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitWeekOfYear|NSCalendarUnitYearForWeekOfYear fromDate:from];
         dateComponents.weekday = self.calendar.firstWeekday;
         return dateComponents;
     })())];
     
     NSDate *toFirstWeekday = [self.calendar dateFromComponents:((^{
-        NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitWeekOfYear|NSCalendarUnitYearForWeekOfYear fromDate:lastDayInMonth];
+        NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitWeekOfYear|NSCalendarUnitYearForWeekOfYear fromDate:to];
         dateComponents.weekday = self.calendar.firstWeekday;
         return dateComponents;
     })())];
@@ -696,6 +705,9 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
         if ((self.startDate && [cellDate compare:self.startDate] == NSOrderedAscending) ||
             (self.endDate && [cellDate compare:self.endDate] == NSOrderedDescending)) {
             cell.outOfRange = YES;
+            if (self.partialMonthsEnabled) {
+                cell.notThisMonth = YES;
+            }
         } else {
             cell.outOfRange = NO;
         }
