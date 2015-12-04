@@ -494,17 +494,21 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
         return dateComponents;
     })()) toDate:firstDayInMonth options:0];
     
-    NSDate *from = self.startDate && [self.startDate compare:firstDayInMonth] == NSOrderedDescending ? self.startDate : firstDayInMonth;
-    NSDate *to = self.endDate && [self.endDate compare:lastDayInMonth] == NSOrderedAscending ? self.endDate : lastDayInMonth;
+    if (self.partialMonthsEnabled && self.startDate) {
+        firstDayInMonth = [firstDayInMonth laterDate:self.startDate];
+    }
+    if (self.partialMonthsEnabled && self.endDate) {
+        lastDayInMonth = [lastDayInMonth earlierDate:self.endDate];
+    }
 
     NSDate *fromFirstWeekday = [self.calendar dateFromComponents:((^{
-        NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitWeekOfYear|NSCalendarUnitYearForWeekOfYear fromDate:from];
+        NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitWeekOfYear|NSCalendarUnitYearForWeekOfYear fromDate:firstDayInMonth];
         dateComponents.weekday = self.calendar.firstWeekday;
         return dateComponents;
     })())];
     
     NSDate *toFirstWeekday = [self.calendar dateFromComponents:((^{
-        NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitWeekOfYear|NSCalendarUnitYearForWeekOfYear fromDate:to];
+        NSDateComponents *dateComponents = [self.calendar components:NSCalendarUnitWeekOfYear|NSCalendarUnitYearForWeekOfYear fromDate:lastDayInMonth];
         dateComponents.weekday = self.calendar.firstWeekday;
         return dateComponents;
     })())];
@@ -652,6 +656,9 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
     RSDFDatePickerDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:RSDFDatePickerViewDayCellIdentifier forIndexPath:indexPath];
     
     NSDate *firstDayInMonth = [self dateForFirstDayInSection:indexPath.section];
+    if (self.partialMonthsEnabled && self.startDate) {
+        firstDayInMonth = [firstDayInMonth laterDate:self.startDate];
+    }
     NSUInteger firstDayInMonthWeekday = [self reorderedWeekday:[self.calendar components:NSCalendarUnitWeekday fromDate:firstDayInMonth].weekday];
     
     NSDate *cellDate = [self.calendar dateByAddingComponents:((^{
