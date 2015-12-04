@@ -179,6 +179,13 @@
  */
 - (Class)dayCellClass;
 
+/**
+ The class used for formatting dates. Default value is `RSDFDatePickerFormatter`.
+ 
+ @discussion Can be overridden in subclasses for customization.
+ */
+- (Class)dateFormatterClass;
+
 @end
 
 /**

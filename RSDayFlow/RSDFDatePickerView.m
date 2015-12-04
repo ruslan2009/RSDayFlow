@@ -31,6 +31,7 @@
 #import "RSDFDatePickerMonthHeader.h"
 #import "RSDFDatePickerView.h"
 #import "RSDFDatePickerDaysOfWeekView.h"
+#import "RSDFDatePickerFormatter.h"
 #import "NSCalendar+RSDFAdditions.h"
 
 static NSString * const RSDFDatePickerViewMonthHeaderIdentifier = @"RSDFDatePickerViewMonthHeaderIdentifier";
@@ -45,6 +46,8 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 @property (nonatomic, readonly, strong) NSDate *today;
 @property (nonatomic, readonly, assign) NSUInteger daysInWeek;
 @property (nonatomic, readonly, strong) NSDate *selectedDate;
+
+@property (nonatomic, readonly, strong) RSDFDatePickerFormatter *dateFormatter;
 
 // From and to date are the currently displayed dates in the calendar
 // These values change in infinite scrolling mode
@@ -251,6 +254,11 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
     return [RSDFDatePickerMonthHeader class];
 }
 
+- (Class)dateFormatterClass
+{
+    return [RSDFDatePickerFormatter class];
+}
+
 #pragma mark - Handling Notifications
 
 - (void)significantTimeChange:(NSNotification *)notification
@@ -381,6 +389,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 - (void)commonInitializer
 {
+    _dateFormatter = [[[self dateFormatterClass] alloc] init];
     NSDateComponents *nowYearMonthComponents = [self.calendar components:(NSCalendarUnitYear | NSCalendarUnitMonth) fromDate:[NSDate date]];
     NSDate *now = [self.calendar dateFromComponents:nowYearMonthComponents];
     
@@ -736,21 +745,11 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
         
         RSDFDatePickerMonthHeader *monthHeader = [collectionView dequeueReusableSupplementaryViewOfKind:kind withReuseIdentifier:RSDFDatePickerViewMonthHeaderIdentifier forIndexPath:indexPath];
         
-        NSString *dateFormatterName = [NSString stringWithFormat:@"calendarMonthHeader_%@_%@", [self.calendar calendarIdentifier], [[self.calendar locale] localeIdentifier]];
-        NSDateFormatter *dateFormatter = [self.calendar df_dateFormatterNamed:dateFormatterName withConstructor:^{
-            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-            [dateFormatter setCalendar:self.calendar];
-            [dateFormatter setLocale:[self.calendar locale]];
-            return dateFormatter;
-        }];
-        
         NSDate *formattedDate = [self dateForFirstDayInSection:indexPath.section];
         RSDFDatePickerDate date = [self pickerDateFromDate:formattedDate];
         
         monthHeader.date = date;
-        
-        NSString *monthString = [dateFormatter shortStandaloneMonthSymbols][date.month - 1];
-        monthHeader.dateLabel.text = [[NSString stringWithFormat:@"%@ %tu", monthString, date.year] uppercaseString];
+        monthHeader.dateLabel.text = [self.dateFormatter formatDateForMonthHeader:date withCalendar:self.calendar];
         
         RSDFDatePickerDate today = [self pickerDateFromDate:_today];
         if ( (today.month == date.month) && (today.year == date.year) ) {
