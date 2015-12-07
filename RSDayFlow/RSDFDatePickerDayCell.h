@@ -26,10 +26,11 @@
 #import <UIKit/UIKit.h>
 #import <RSDayFlow/RSDFDatePickerDate.h>
 
+
 /**
- The `RSDFDatePickerDayCell` is a cell which used to display a day in the date picker view.
+ This is an abstract class containing only properties.
  */
-@interface RSDFDatePickerDayCell : UICollectionViewCell
+@interface RSDFAbstractDatePickerDayCell : UICollectionViewCell
 
 ///-------------------------
 /// @name Accessing Subviews
@@ -53,7 +54,7 @@
  A Boolean value that determines whether the cell's day that's not this month.
  
  @discussion Cells with these days do not display the today image, the overlay image, the marks and the divider image.
-*/
+ */
 @property (nonatomic, getter = isNotThisMonth) BOOL notThisMonth;
 
 /**
@@ -92,6 +93,18 @@
  The mark image for the cell of the day. The default mark image is a small round mark.
  */
 @property (nonatomic, strong) UIImage *markImage;
+
+/**
+ Custom payload for the cell of the day.
+ */
+@property (nonatomic, strong) id customPayload;
+
+@end
+
+/**
+ The `RSDFDatePickerDayCell` is a cell which used to display a day in the date picker view.
+ */
+@interface RSDFDatePickerDayCell : RSDFAbstractDatePickerDayCell
 
 ///---------------------------------------
 /// @name Accessing Attributes of the View

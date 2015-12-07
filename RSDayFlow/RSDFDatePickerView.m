@@ -660,9 +660,9 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 #pragma mark - <UICollectionViewDataSource>
 
-- (RSDFDatePickerDayCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+- (RSDFAbstractDatePickerDayCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    RSDFDatePickerDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:RSDFDatePickerViewDayCellIdentifier forIndexPath:indexPath];
+    RSDFAbstractDatePickerDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:RSDFDatePickerViewDayCellIdentifier forIndexPath:indexPath];
     
     NSDate *firstDayInMonth = [self dateForFirstDayInSection:indexPath.section];
     if (self.partialMonthsEnabled && self.startDate) {
@@ -697,6 +697,10 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
                     cell.markImageColor = [self.dataSource datePickerView:self markImageColorForDate:cellDate];
                 }
             }
+        }
+        
+        if ([self.dataSource respondsToSelector:@selector(datePickerView:customPayloadForCell:forDate:)]) {
+            cell.customPayload = [self.dataSource datePickerView:self customPayloadForCell:cell forDate:cellPickerDate];
         }
         
         NSComparisonResult result = [_today compare:cellDate];
@@ -802,7 +806,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    RSDFDatePickerDayCell *cell = (RSDFDatePickerDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    RSDFAbstractDatePickerDayCell *cell = (RSDFAbstractDatePickerDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
     
     if (cell.isNotThisMonth || cell.isOutOfRange) {
         return NO;
@@ -818,7 +822,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    RSDFDatePickerDayCell *cell = ((RSDFDatePickerDayCell *)[self.collectionView cellForItemAtIndexPath:indexPath]);
+    RSDFAbstractDatePickerDayCell *cell = ((RSDFAbstractDatePickerDayCell *)[self.collectionView cellForItemAtIndexPath:indexPath]);
     
     if (cell.isNotThisMonth || cell.isOutOfRange) {
         return NO;

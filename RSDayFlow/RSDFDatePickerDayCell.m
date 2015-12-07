@@ -25,6 +25,9 @@
 
 #import "RSDFDatePickerDayCell.h"
 
+@implementation RSDFAbstractDatePickerDayCell
+@end
+
 @interface RSDFDatePickerDayCell ()
 
 + (NSCache *)imageCache;
@@ -38,12 +41,14 @@
 @end
 
 @implementation RSDFDatePickerDayCell
+{
+    UILabel *_dateLabel;
+    UIImage *_markImage;
+    UIColor *_markImageColor;
+}
 
-@synthesize dateLabel = _dateLabel;
 @synthesize selectedDayImageView = _selectedDayImageView;
 @synthesize overlayImageView = _overlayImageView;
-@synthesize markImage = _markImage;
-@synthesize markImageColor = _markImageColor;
 @synthesize markImageView = _markImageView;
 @synthesize dividerImageView = _dividerImageView;
 

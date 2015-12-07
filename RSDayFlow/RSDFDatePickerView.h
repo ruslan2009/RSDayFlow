@@ -24,9 +24,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RSDFDatePickerDate.h"
 
 @protocol RSDFDatePickerViewDelegate;
 @protocol RSDFDatePickerViewDataSource;
+@class RSDFAbstractDatePickerDayCell;
 
 /**
  The `RSDFDatePickerView` is a calendar view with infinity scrolling.
@@ -279,5 +281,14 @@
  @return The mark image for the specified date.
  */
 - (UIImage *)datePickerView:(RSDFDatePickerView *)view markImageForDate:(NSDate *)date;
+
+/**
+ Asks the data source about the custom payload for the specified date.
+ 
+ @param view The date picker view object that is asking about the custom payload for the specified date.
+ 
+ @return The custom payload for the specified date.
+ */;
+- (id)datePickerView:(RSDFDatePickerView *)view customPayloadForCell:(RSDFAbstractDatePickerDayCell *)cell forDate:(RSDFDatePickerDate)date;
 
 @end
