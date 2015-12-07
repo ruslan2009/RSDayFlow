@@ -433,6 +433,10 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 - (NSDate *)dateForCellAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDate *firstDayInMonth = [self dateForFirstDayInSection:indexPath.section];
+    if (self.partialMonthsEnabled && self.startDate) {
+        firstDayInMonth = [firstDayInMonth laterDate:self.startDate];
+    }
+
     NSUInteger weekday = [self reorderedWeekday:[self.calendar components:NSCalendarUnitWeekday fromDate:firstDayInMonth].weekday];
     
     NSDate *cellDate = [self.calendar dateByAddingComponents:((^{
