@@ -489,6 +489,9 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 {
     NSInteger monthSection = [self sectionForDate:date];
     NSDate *firstDayInMonth = [self dateForFirstDayInSection:monthSection];
+    if (self.partialMonthsEnabled && self.startDate) {
+        firstDayInMonth = [firstDayInMonth laterDate:self.startDate];
+    }
     NSUInteger weekday = [self reorderedWeekday:[self.calendar components:NSCalendarUnitWeekday fromDate:firstDayInMonth].weekday];
     NSInteger dateItem = [self.calendar components:NSCalendarUnitDay fromDate:firstDayInMonth toDate:date options:0].day + weekday;
     NSIndexPath *indexPath = [NSIndexPath indexPathForItem:dateItem inSection:monthSection];
