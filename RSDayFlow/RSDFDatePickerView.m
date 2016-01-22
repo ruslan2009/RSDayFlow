@@ -99,9 +99,9 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _calendar = calendar;
         _startDate = startDate ? [self dateWithoutTimeComponents:startDate] : nil;
         _endDate = endDate ? [self dateWithoutTimeComponents:endDate] : nil;
-        _calendar = calendar;
         [self commonInitializer];
     }
     return self;
