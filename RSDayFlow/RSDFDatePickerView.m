@@ -852,7 +852,16 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(RSDFDatePickerCollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [collectionViewLayout selfItemSize];
+    NSInteger cellHeight = -1;
+    if ([self.delegate respondsToSelector:@selector(datePickerView:cellHeightForDate:)]) {
+        NSDate *date = [self dateForCellAtIndexPath:indexPath];
+        cellHeight = [self.delegate datePickerView:self cellHeightForDate:date];
+    }
+    CGSize cellSize = [collectionViewLayout selfItemSize];
+    if (cellHeight >= 0) {
+        cellSize.height = cellHeight;
+    }
+    return cellSize;
 }
 
 #pragma mark - <RSDFDatePickerCollectionViewDelegate>

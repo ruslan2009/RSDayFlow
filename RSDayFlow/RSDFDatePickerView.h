@@ -240,6 +240,8 @@
  */
 - (void)datePickerView:(RSDFDatePickerView *)view didSelectDate:(NSDate *)date;
 
+- (NSInteger)datePickerView:(RSDFDatePickerView *)view cellHeightForDate:(NSDate *)date;
+
 @end
 
 /**
