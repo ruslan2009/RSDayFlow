@@ -106,6 +106,7 @@
  */
 
 - (void)scrollToToday:(BOOL)animated;
+- (void)scrollToToday:(BOOL)animated atBottom:(BOOL)atBottom;
 
 /**
  Scrolls the date picker view to the given date.
@@ -114,6 +115,7 @@
  */
 
 - (void)scrollToDate:(NSDate *)date animated:(BOOL)animated;
+- (void)scrollToDate:(NSDate *)date animated:(BOOL)animated atBottom:(BOOL)atBottom;
 
 /// ------------------------
 /// @name Selecting the Date

@@ -279,6 +279,11 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 - (void)scrollToDate:(NSDate *)date animated:(BOOL)animated
 {
+    [self scrollToDate:date animated:animated atBottom:NO];
+}
+
+- (void)scrollToDate:(NSDate *)date animated:(BOOL)animated atBottom:(BOOL)atBottom;
+{
     if (self.startDate && [date compare:self.startDate] == NSOrderedAscending) {
         return;
     }
@@ -326,7 +331,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
     CGFloat delta = CGRectGetMaxY(dateItemRect) - CGRectGetMinY(monthSectionHeaderRect);
     CGFloat actualViewHeight = CGRectGetHeight(cv.frame) - cv.contentInset.top - cv.contentInset.bottom;
     
-    if (delta <= actualViewHeight) {
+    if (delta <= actualViewHeight && !atBottom) {
         [self scrollToTopOfSection:monthSection animated:animated];
     } else {
         [cv scrollToItemAtIndexPath:dateItemIndexPath atScrollPosition:UICollectionViewScrollPositionBottom animated:animated];
@@ -336,6 +341,11 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 - (void)scrollToToday:(BOOL)animated
 {
     [self scrollToDate:self.today animated:animated];
+}
+
+- (void)scrollToToday:(BOOL)animated atBottom:(BOOL)atBottom
+{
+    [self scrollToDate:self.today animated:animated atBottom:atBottom];
 }
 
 - (void)selectDate:(NSDate *)date
