@@ -434,10 +434,7 @@ static NSString * const RSDFDatePickerViewDayCellIdentifier = @"RSDFDatePickerVi
 
 - (NSDate *)dateByMovingToEndOfMonth:(NSDate *)date
 {
-    NSDateComponents *components = [self.calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay fromDate:date];
-    
-    components.month = components.month + 1;
-    return [self.calendar dateFromComponents:components];
+    return [self.calendar dateByAddingUnit:NSCalendarUnitMonth value:1 toDate:date options:0];
 }
 
 - (NSDate *)dateForCellAtIndexPath:(NSIndexPath *)indexPath
